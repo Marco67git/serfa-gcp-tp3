@@ -408,3 +408,49 @@ Try this out ! run the Node.JS Docker Compose service, create a file inside the 
 
 6. we rebuilt our Docker app' image
 7. we checked in the browser if the database error has disappeared, and it has !
+
+### trying Firebase locally
+
+- for testing, we want to write something to Firebase every time the page is loaded
+- we use a development branch (we don't want to push the code online)
+- we run `docker compose watch`:
+  - we can access the `nodejs` container at all times
+  - every time we run `npm run build`, the site is updated
+
+... even if we follow the docs, we don't seem to be able to communicate with our Firebase instance, that's a shame, moving to another technology since the goal of selecting Firebase was to go faster.
+
+What we keep from this experience is the Javascript bundling code and our development environment.
+
+
+### chosing a SQL database
+
+We select the default choice because of its popularity and its ease of use: PostgreSQL.
+
+We need 2 more components:
+
+- a web API
+- a database
+
+Let's start with the web API.
+
+### starting to route traffic via a PHP index entrypoint
+
+- we managed to route traffic to a PHP file using a PHP Apache conf locally using the `php:apache` Docker image
+- now, if we want that to work on the remote, we need to install PHP in the VM in the CI/CD pipeline
+
+### getting our tickets from our first API route
+
+- now we have moved the tickets to a PHP API endpoint and we have set up routing in the `index.php` file
+- we created an `/api/tickets` endpoint to get our list of tickets from the frontend
+- we have installed our first [Composer](https://getcomposer.org/) package (with packages found on [Packagist](https://packagist.org/))
+- we created a dynamic environment variable `HOST` to select the correct host for Javascript based on the environment
+
+... update your `HOST` environment variable locally and on the remote VM!
+
+### cool, let's move on to the database
+
+- we have created an instance of PostgreSQL in our Docker Compose file + a `pgadmin` GUI instance to manage it
+- run the dockerized locally and connect to your database with `pgadmin`!
+- we are ready now to a remote Supabase instance; why Supabase? because it's easy and it's Postgres as well...
+
+... create a supabase instance, connect to it from your PHP code locally, THEN connect to it from your PHP code on the remote VM.

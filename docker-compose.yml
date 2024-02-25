@@ -1,8 +1,33 @@
 services:
 
+  frontend:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    volumes:
+      - .:/var/www/html
+
   nodejs:
     build: 
       context: .
       dockerfile: nodejs.Dockerfile
     volumes:
       - .:/app
+
+  pgadmin:
+    image: dpage/pgadmin4:8.3
+    environment:
+      PGADMIN_DEFAULT_EMAIL: postgres@postgres.com
+      PGADMIN_DEFAULT_PASSWORD: postgres
+    ports:
+      - "8080:80"
+
+  postgres:
+    image: "postgres:16"
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"

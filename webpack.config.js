@@ -9,8 +9,8 @@ module.exports = {
   entry: './src/index.js',
   // The location of the build folder described above
   output: {
-    path: path.resolve(__dirname, 'html/javascript'),
-    filename: 'firebase-bundle.js'
+    path: path.resolve(__dirname, 'public/javascript'),
+    filename: 'frontend-bundle.js'
   },
   // Optional and for development only. This provides the ability to
   // map the built code back to the original source format when debugging.

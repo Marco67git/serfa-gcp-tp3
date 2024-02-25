@@ -1,26 +1,37 @@
-// Import the functions you need from the SDKs you need
-import { initializeApp } from 'firebase/app';
-import { getAnalytics } from 'firebase/analytics'
-import { getDatabase } from 'firebase/database';
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+async function getTickets() {
+    try {
+        const call = await fetch(`${window.HOST}/api/tickets`);
+        const data = await call.json();
+        return data;
+    } catch (error) {
+        console.error('Error:', error);
+        return [];
+    }
+}
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyAHTqQguGQx8IkMM6erKSuHEh-yIj759bM",
-  authDomain: "gcloudvmapp.firebaseapp.com",
-  projectId: "gcloudvmapp",
-  storageBucket: "gcloudvmapp.appspot.com",
-  messagingSenderId: "646717833282",
-  appId: "1:646717833282:web:a26b0d91d8a728e1f76ddb",
-  measurementId: "G-5GCJGXN4D2",
-  databaseUrl: "https://gcloudvmapp-default-rtdb.europe-west1.firebasedatabase.app/"
-};
+// when my HTML page is full loaded, trigger that code
+document.addEventListener('DOMContentLoaded', async () => {
+    console.log("javascript is loaded");
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+    let tickets = [];
+    tickets = await getTickets();
 
-// initialize database
-const database = getDatabase(app);
+    // generate HTML for each ticket row
+    tickets.forEach(ticket => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td>${ticket.id}</td>
+            <td>${ticket.title}</td>
+            <td>${ticket.description}</td>
+            <td>
+                <span class="status-label ${ticket.status === 'Assigned' ? 'assigned' : 'unassigned'}">${ticket.status}</span>
+            </td>
+            <td>${ticket.assignedTo || '-'}</td>
+            <td class="action-buttons">
+                <button class="button" onclick="deleteTicket(${ticket.id})">Delete</button>
+                <button class="button" onclick="assignTicket(${ticket.id})">Assign</button>
+            </td>
+        `;
+        document.querySelector('tbody').appendChild(tr);
+    });
+});
